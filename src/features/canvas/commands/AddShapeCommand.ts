@@ -9,12 +9,12 @@ export class AddShapeCommand implements Command {
     this.shape = shape;
   }
 
-  execute() {
+  execute(): void {
     useShapesStore.getState().addShape(this.shape);
     useShapesStore.getState().selectShape(this.shape.id);
   }
 
-  undo() {
+  undo(): void {
     useShapesStore.getState().deleteShape(this.shape.id);
     useShapesStore.getState().selectShape(null);
   }

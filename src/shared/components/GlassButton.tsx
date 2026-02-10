@@ -5,9 +5,9 @@
  */
 
 import React from 'react';
-import { Text, Pressable, ViewStyle, TextStyle, StyleProp } from 'react-native';
+import { Pressable, StyleProp, Text, TextStyle, ViewStyle } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import { glassStyles, glassBlur, colors, typography } from '@/theme';
+import { colors, glassBlur, glassStyles, typography } from '@/theme';
 
 interface GlassButtonProps {
   title: string;

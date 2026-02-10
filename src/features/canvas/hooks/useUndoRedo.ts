@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { commandManager } from '../commands/CommandManager';
 
-export const useUndoRedo = () => {
+export const useUndoRedo = (): {
+  canUndo: boolean;
+  canRedo: boolean;
+  undo: () => void;
+  redo: () => void;
+} => {
   const [canUndo, setCanUndo] = useState(commandManager.canUndo);
   const [canRedo, setCanRedo] = useState(commandManager.canRedo);
 
   useEffect(() => {
-    const updateState = () => {
+    const updateState = (): void => {
       setCanUndo(commandManager.canUndo);
       setCanRedo(commandManager.canRedo);
     };

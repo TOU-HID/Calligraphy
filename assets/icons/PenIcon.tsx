@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas, Path, Group } from '@shopify/react-native-skia';
+import { Canvas, Group, Path } from '@shopify/react-native-skia';
 
 interface PenIconProps {
   size?: number;

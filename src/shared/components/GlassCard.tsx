@@ -5,9 +5,9 @@
  */
 
 import React from 'react';
-import { View, ViewStyle, StyleProp, Pressable } from 'react-native';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import { glassStyles, glassBlur, spacing } from '@/theme';
+import { glassBlur, glassStyles, spacing } from '@/theme';
 
 interface GlassCardProps {
   children: React.ReactNode;

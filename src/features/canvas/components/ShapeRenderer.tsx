@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group, Rect, Circle, Path } from '@shopify/react-native-skia';
+import { Circle, Group, Path, Rect } from '@shopify/react-native-skia';
 import { Shape } from '../types/shapes';
 
 interface ShapeRendererProps {

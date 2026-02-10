@@ -11,11 +11,12 @@ interface ShapesState {
     color: string;
     strokeWidth: number;
   };
-  
+
   // Actions
   addShape: (shape: Shape) => void;
   updateShape: (id: string, update: Partial<Shape> | ((prev: Shape) => Partial<Shape>)) => void;
   deleteShape: (id: string) => void;
+  clearAll: () => void;
   setShapes: (shapes: Shape[]) => void;
   selectShape: (id: string | null) => void;
   setCanvasInfo: (id: string, name: string) => void;
@@ -34,29 +35,32 @@ export const useShapesStore = create<ShapesState>((set) => ({
     strokeWidth: 3,
   },
 
-  addShape: (shape) => set((state) => ({ 
-    shapes: [...state.shapes, shape] 
-  })),
+  addShape: (shape) =>
+    set((state) => ({
+      shapes: [...state.shapes, shape],
+    })),
 
-  updateShape: (id, update) => set((state) => ({
-    shapes: state.shapes.map((shape) => {
-      if (shape.id !== id) return shape;
-      
-      const newValues = typeof update === 'function' ? update(shape) : update;
-      
-      // Ensure type safety when merging
-      return { ...shape, ...newValues } as Shape;
-    }),
-  })),
+  updateShape: (id, update) =>
+    set((state) => ({
+      shapes: state.shapes.map((shape) => {
+        if (shape.id !== id) return shape;
 
-  deleteShape: (id) => set((state) => ({
-    shapes: state.shapes.filter((s) => s.id !== id),
-    selectedShapeId: state.selectedShapeId === id ? null : state.selectedShapeId,
-  })),
+        const newValues = typeof update === 'function' ? update(shape) : update;
+
+        // Ensure type safety when merging
+        return { ...shape, ...newValues } as Shape;
+      }),
+    })),
+
+  deleteShape: (id) =>
+    set((state) => ({
+      shapes: state.shapes.filter((s) => s.id !== id),
+      selectedShapeId: state.selectedShapeId === id ? null : state.selectedShapeId,
+    })),
+
+  clearAll: () => set({ shapes: [], selectedShapeId: null }),
 
   setShapes: (shapes) => set({ shapes }),
-
-
 
   selectShape: (id) => set({ selectedShapeId: id }),
 
@@ -64,7 +68,8 @@ export const useShapesStore = create<ShapesState>((set) => ({
 
   setDrawingMode: (isDrawing) => set({ isDrawingMode: isDrawing, selectedShapeId: null }),
 
-  setDrawingConfig: (config) => set((state) => ({ 
-    drawingConfig: { ...state.drawingConfig, ...config } 
-  })),
+  setDrawingConfig: (config) =>
+    set((state) => ({
+      drawingConfig: { ...state.drawingConfig, ...config },
+    })),
 }));

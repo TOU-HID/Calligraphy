@@ -13,11 +13,11 @@ export class UpdateShapeCommand implements Command {
     this.newProps = newProps;
   }
 
-  execute() {
+  execute(): void {
     useShapesStore.getState().updateShape(this.shapeId, this.newProps);
   }
 
-  undo() {
+  undo(): void {
     useShapesStore.getState().updateShape(this.shapeId, this.oldProps);
   }
 }

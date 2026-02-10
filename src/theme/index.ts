@@ -8,12 +8,12 @@ import { colors, darkColors } from './colors';
 import { layout, spacing } from './spacing';
 import { textStyles, typography } from './typography';
 import {
-  glassColors,
+  darkGlassStyles,
   glassBlur,
   glassBorder,
+  glassColors,
   glassShadow,
   glassStyles,
-  darkGlassStyles,
 } from './glassmorphism';
 
 export const theme = {

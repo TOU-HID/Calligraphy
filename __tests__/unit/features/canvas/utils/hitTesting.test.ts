@@ -1,8 +1,7 @@
 import {
-  isPointInShape,
-  findShapeAtPoint,
-  screenToCanvasPoint,
   findResizeHandle,
+  isPointInShape,
+  screenToCanvasPoint,
 } from '../../../../../src/features/canvas/utils/hitTesting';
 import { Shape } from '../../../../../src/features/canvas/types/shapes';
 
@@ -80,11 +79,11 @@ describe('hitTesting', () => {
     it('should convert screen point to canvas point with translation and scale', () => {
       const screen = { x: 100, y: 100 };
       const transform = { x: 50, y: 50, scale: 2 };
-      
+
       // (100 - 50) / 2 = 25
       const expected = { x: 25, y: 25 };
       const result = screenToCanvasPoint(screen, transform);
-      
+
       expect(result).toEqual(expected);
     });
   });

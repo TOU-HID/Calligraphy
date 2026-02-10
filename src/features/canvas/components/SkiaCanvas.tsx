@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import { Canvas, Path } from '@shopify/react-native-skia';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useGestures } from '../hooks/useGestures';
 import { useFreeHandDrawing } from '../hooks/useFreeHandDrawing';
 import { useShapesStore } from '@store/shapesStore';

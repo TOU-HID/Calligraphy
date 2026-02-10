@@ -1,0 +1,256 @@
+
+> calligraphy@0.0.1 lint
+> eslint . --ext .js,.jsx,.ts,.tsx
+
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/__tests__/unit/commands/CommandManager.test.ts
+  5:26  error  Member 'Command' of the import declaration should be sorted alphabetically  sort-imports
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/__tests__/unit/features/canvas/utils/hitTesting.test.ts
+  3:3  error  Member 'findShapeAtPoint' of the import declaration should be sorted alphabetically  sort-imports
+  3:3  error  'findShapeAtPoint' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/__tests__/unit/store/shapesStore.test.ts
+  6:21  error  Member 'Circle' of the import declaration should be sorted alphabetically  sort-imports
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/assets/icons/PenIcon.tsx
+  2:24  error    Member 'Group' of the import declaration should be sorted alphabetically  sort-imports
+  9:73  warning  Missing return type on function                                           @typescript-eslint/explicit-function-return-type
+  9:73  warning  Missing return type on function                                           @typescript-eslint/explicit-module-boundary-types
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/metro.config.js
+  1:43  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/commands/AddShapeCommand.ts
+  12:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  12:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  17:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  17:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/commands/CommandManager.ts
+  19:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  19:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  31:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  31:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  40:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  40:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  57:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/commands/DeleteShapeCommand.ts
+  12:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  12:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  17:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  17:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/commands/UpdateShapeCommand.ts
+  16:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  16:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+  20:3  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  20:3  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/components/ResizeHandlesOverlay.tsx
+  20:33  warning  Missing return type on function                                                                                                                                                                                                                             @typescript-eslint/explicit-function-return-type
+  62:81  warning  Missing return type on function                                                                                                                                                                                                                             @typescript-eslint/explicit-function-return-type
+  63:55  error    Unexpected any. Specify a different type                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  67:27  error    React Hook "useAnimatedStyle" is called in function "renderHandle" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use"  react-hooks/rules-of-hooks
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/components/ShapeRenderer.tsx
+  2:23  error  Member 'Circle' of the import declaration should be sorted alphabetically  sort-imports
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/components/SkiaCanvas.tsx
+  2:16  error  Member 'StyleSheet' of the import declaration should be sorted alphabetically  sort-imports
+  4:27  error  Member 'Gesture' of the import declaration should be sorted alphabetically     sort-imports
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useAutoSave.ts
+   3:26  error    Member 'CanvasData' of the import declaration should be sorted alphabetically  sort-imports
+   8:31  warning  Missing return type on function                                                @typescript-eslint/explicit-function-return-type
+   8:31  warning  Missing return type on function                                                @typescript-eslint/explicit-module-boundary-types
+  20:27  warning  Missing return type on function                                                @typescript-eslint/explicit-function-return-type
+  23:41  error    Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useFreeHandDrawing.ts
+   3:35  error    Member 'useDerivedValue' of the import declaration should be sorted alphabetically  sort-imports
+   8:38  warning  Missing return type on function                                                     @typescript-eslint/explicit-function-return-type
+   8:38  warning  Missing return type on function                                                     @typescript-eslint/explicit-module-boundary-types
+  13:31  warning  Missing return type on function                                                     @typescript-eslint/explicit-function-return-type
+  28:7   error    Expected property shorthand                                                         object-shorthand
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useGestures.ts
+   26:24  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   27:33  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   28:31  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   53:96  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   58:56  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   63:61  warning  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  128:27  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  167:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeManipulation.ts
+  9:40  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  9:40  warning  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts
+  11:48  warning  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/explicit-function-return-type
+  11:48  warning  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/explicit-module-boundary-types
+  32:23  error    Error: Cannot access variable before it is declared
+
+`resizeRectangle` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:32:23
+  30 |           switch (shape.type) {
+  31 |             case 'rectangle':
+> 32 |               runOnJS(resizeRectangle)(shape, handle, event.translationX, event.translationY);
+     |                       ^^^^^^^^^^^^^^^ `resizeRectangle` accessed before it is declared
+  33 |               break;
+  34 |             case 'circle':
+  35 |               runOnJS(resizeCircle)(shape, event.translationX, event.translationY);
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:72:3
+   70 |   );
+   71 |
+>  72 |   const resizeRectangle = useCallback(
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  73 |     (rect: Shape & { type: 'rectangle' }, handle: ResizeHandle, deltaX: number, deltaY: number) => {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  74 |       const minSize = 20;
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 115 |     [updateShape],
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 116 |   );
+      | ^^^^^ `resizeRectangle` is declared here
+  117 |
+  118 |   const resizeCircle = useCallback(
+  119 |     (circle: Shape & { type: 'circle' }, deltaX: number, deltaY: number) => {  react-hooks/immutability
+  35:23  error    Error: Cannot access variable before it is declared
+
+`resizeCircle` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:35:23
+  33 |               break;
+  34 |             case 'circle':
+> 35 |               runOnJS(resizeCircle)(shape, event.translationX, event.translationY);
+     |                       ^^^^^^^^^^^^ `resizeCircle` accessed before it is declared
+  36 |               break;
+  37 |             case 'triangle':
+  38 |               runOnJS(resizeTriangle)(shape, handle, event.translationX, event.translationY);
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:118:3
+  116 |   );
+  117 |
+> 118 |   const resizeCircle = useCallback(
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 119 |     (circle: Shape & { type: 'circle' }, deltaX: number, deltaY: number) => {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 120 |       const minRadius = 10;
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 127 |     [updateShape],
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 128 |   );
+      | ^^^^^ `resizeCircle` is declared here
+  129 |
+  130 |   const resizeTriangle = useCallback(
+  131 |     (                                                                                                                                                                                                react-hooks/immutability
+  38:23  error    Error: Cannot access variable before it is declared
+
+`resizeTriangle` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:38:23
+  36 |               break;
+  37 |             case 'triangle':
+> 38 |               runOnJS(resizeTriangle)(shape, handle, event.translationX, event.translationY);
+     |                       ^^^^^^^^^^^^^^ `resizeTriangle` accessed before it is declared
+  39 |               break;
+  40 |           }
+  41 |         })
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:130:3
+  128 |   );
+  129 |
+> 130 |   const resizeTriangle = useCallback(
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 131 |     (
+      | ^^^^^
+> 132 |       triangle: Shape & { type: 'triangle' },
+      …
+      | ^^^^^
+> 172 |     [updateShape],
+      | ^^^^^
+> 173 |   );
+      | ^^^^^ `resizeTriangle` is declared here
+  174 |
+  175 |   return {
+  176 |     createResizeGesture,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/immutability
+  59:19  error    Error: Cannot access variable before it is declared
+
+`registerResizeCommand` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:59:19
+  57 |           }
+  58 |
+> 59 |           runOnJS(registerResizeCommand)(shape.id, oldProps, newProps);
+     |                   ^^^^^^^^^^^^^^^^^^^^^ `registerResizeCommand` accessed before it is declared
+  60 |         });
+  61 |     },
+  62 |     [shape],
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useShapeResizing.ts:65:3
+  63 |   );
+  64 |
+> 65 |   const registerResizeCommand = useCallback(
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 66 |     (shapeId: string, oldProps: Partial<Shape>, newProps: Partial<Shape>) => {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 67 |       commandManager.execute(new UpdateShapeCommand(shapeId, oldProps, newProps));
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     },
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     [],
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |   );
+     | ^^^^^ `registerResizeCommand` is declared here
+  71 |
+  72 |   const resizeRectangle = useCallback(
+  73 |     (rect: Shape & { type: 'rectangle' }, handle: ResizeHandle, deltaX: number, deltaY: number) => {                                                                                  react-hooks/immutability
+  62:5   warning  React Hook useCallback has missing dependencies: 'registerResizeCommand', 'resizeCircle', 'resizeRectangle', 'resizeTriangle', and 'savedProps'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/features/canvas/hooks/useUndoRedo.ts
+  1:20  error    Member 'useEffect' of the import declaration should be sorted alphabetically  sort-imports
+  4:31  warning  Missing return type on function                                               @typescript-eslint/explicit-function-return-type
+  4:31  warning  Missing return type on function                                               @typescript-eslint/explicit-module-boundary-types
+  9:28  warning  Missing return type on function                                               @typescript-eslint/explicit-function-return-type
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/screens/CanvasScreen.tsx
+    1:35  error    Member 'memo' of the import declaration should be sorted alphabetically  sort-imports
+   98:53  warning  Inline style: { justifyContent: 'center', alignItems: 'center' }         react-native/no-inline-styles
+   99:30  warning  Inline style: { fontSize: 16 }                                           react-native/no-inline-styles
+  109:54  warning  Inline style: { justifyContent: 'center', alignItems: 'center' }         react-native/no-inline-styles
+  110:30  warning  Inline style: { fontSize: 16 }                                           react-native/no-inline-styles
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/shared/components/GlassButton.tsx
+   8:16  error    Member 'Pressable' of the import declaration should be sorted alphabetically  sort-imports
+  10:23  error    Member 'glassBlur' of the import declaration should be sorted alphabetically  sort-imports
+  44:16  warning  Inline style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }  react-native/no-inline-styles
+  50:11  warning  Inline style: { textAlign: 'center', zIndex: 1 }                              react-native/no-inline-styles
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/shared/components/GlassCard.tsx
+   8:27  error    Member 'StyleProp' of the import declaration should be sorted alphabetically  sort-imports
+  10:23  error    Member 'glassBlur' of the import declaration should be sorted alphabetically  sort-imports
+  21:52  error    Component definition is missing display name                                  react/display-name
+  32:16  warning  Inline style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }  react-native/no-inline-styles
+  36:20  warning  Inline style: { zIndex: 1 }                                                   react-native/no-inline-styles
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/shared/components/GlassContainer.tsx
+   8:27  error    Member 'StyleProp' of the import declaration should be sorted alphabetically  sort-imports
+  10:23  error    Member 'glassBlur' of the import declaration should be sorted alphabetically  sort-imports
+  32:16  warning  Inline style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }  react-native/no-inline-styles
+  36:20  warning  Inline style: { zIndex: 1 }                                                   react-native/no-inline-styles
+
+/Users/md.touhidulislam/Personal_Project/Tasks-assignment/caligraphy/calligraphy/src/theme/index.ts
+  12:3  error  Member 'glassBlur' of the import declaration should be sorted alphabetically  sort-imports
+
+✖ 85 problems (32 errors, 53 warnings)
+  19 errors and 0 warnings potentially fixable with the `--fix` option.
+

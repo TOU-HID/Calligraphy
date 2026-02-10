@@ -1,26 +1,27 @@
 import { useEffect, useRef } from 'react';
 import { useShapesStore } from '@store/shapesStore';
-import { StorageService, CanvasData } from '@/core/storage/StorageService';
+import { CanvasData, StorageService } from '@/core/storage/StorageService';
+import { Shape } from '@features/canvas/types/shapes';
 
 const AUTOSAVE_DELAY = 1000; // 1 second debounce
 const DEFAULT_CANVAS_ID = 'default-canvas';
 
-export const useAutoSave = () => {
+export const useAutoSave = (): void => {
   const shapes = useShapesStore((state) => state.shapes);
   const canvasId = useShapesStore((state) => state.canvasId);
   const canvasName = useShapesStore((state) => state.canvasName);
   const setShapes = useShapesStore((state) => state.setShapes);
   const setCanvasInfo = useShapesStore((state) => state.setCanvasInfo);
-  
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLoadedRef = useRef(false);
 
   // Load on mount
   useEffect(() => {
-    const loadCanvas = () => {
+    const loadCanvas = (): void => {
       const savedCanvas = StorageService.loadCanvas(DEFAULT_CANVAS_ID);
       if (savedCanvas) {
-        setShapes(savedCanvas.shapes as any); // Type assertion needed until Shape type matches perfectly
+        setShapes(savedCanvas.shapes as Shape[]);
         setCanvasInfo(savedCanvas.id, savedCanvas.name);
       } else {
         // Initialize new canvas if needing specific setup
@@ -49,11 +50,11 @@ export const useAutoSave = () => {
         createdAt: Date.now(), // ideally should be preserved
         updatedAt: Date.now(),
       };
-      
+
       StorageService.saveCanvas(canvasData);
-      
+
       // Also update metadata list for the gallery (if we had one)
-      // StorageService.saveCanvasList([...]); 
+      // StorageService.saveCanvasList([...]);
     }, AUTOSAVE_DELAY);
 
     return () => {

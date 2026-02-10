@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { runOnJS, useSharedValue, useDerivedValue } from 'react-native-reanimated';
+import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { v4 as uuidv4 } from 'uuid';
 import { useShapesStore } from '@store/shapesStore';
 import { FreeHandPath, Point } from '../types/shapes';
@@ -25,7 +25,7 @@ export const useFreeHandDrawing = () => {
       type: 'path',
       x: 0,
       y: 0,
-      points: points,
+      points,
       color: drawingConfig.color,
       opacity: 1,
       borderWidth: drawingConfig.strokeWidth,
