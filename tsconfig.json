@@ -1,8 +1,79 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest"],
+    // Strict Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    // Module Resolution
+    "target": "esnext",
+    "module": "esnext",
+    "lib": [
+      "es2021"
+    ],
+    "jsx": "react-native",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    // Path Aliases
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@commands/*": [
+        "src/commands/*"
+      ],
+      "@navigation/*": [
+        "src/navigation/*"
+      ],
+      "@theme/*": [
+        "src/theme/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ]
+    },
+    // Emit
+    "skipLibCheck": true,
+    "allowJs": false,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "include": [
+    "src/**/*",
+    "assets/**/*",
+    "App.tsx",
+    "__tests__/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }
