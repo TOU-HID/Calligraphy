@@ -10,9 +10,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MigrationService } from '@/core/storage/migrations/index';
 import { colors } from '@/theme';
-// import { GlassCard } from '@/shared/components'; // Removed as used in CanvasScreen now
-import { CanvasScreen } from '@/screens/CanvasScreen';
 import { AutoSaveManager } from '@/features/canvas/components/AutoSaveManager';
+import { RootNavigator } from '@/navigation';
 
 /**
  * App Component
@@ -91,7 +90,7 @@ function App(): React.JSX.Element {
           translucent
         />
         <AutoSaveManager />
-        <CanvasScreen />
+        <RootNavigator />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

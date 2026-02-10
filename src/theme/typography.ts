@@ -96,3 +96,22 @@ export const textStyles = {
 } as const;
 
 export type TextStyleKey = keyof typeof textStyles;
+
+// Export typography with shortcuts
+export const typographyWithStyles = {
+  ...typography,
+  h1: textStyles.headingLarge,
+  h2: textStyles.headingMedium,
+  h3: textStyles.headingSmall,
+  body: textStyles.bodyMedium,
+  caption: textStyles.caption,
+  button: textStyles.button,
+} as const;
+
+// Shortcuts for common text styles
+export const h1 = textStyles.headingLarge;
+export const h2 = textStyles.headingMedium;
+export const h3 = textStyles.headingSmall;
+export const body = textStyles.bodyMedium;
+export const caption = textStyles.caption;
+export const button = textStyles.button;

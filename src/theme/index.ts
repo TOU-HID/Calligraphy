@@ -6,7 +6,16 @@
 
 import { colors, darkColors } from './colors';
 import { layout, spacing } from './spacing';
-import { textStyles, typography } from './typography';
+import {
+  textStyles,
+  typography as typographyBase,
+  h1,
+  h2,
+  h3,
+  body,
+  caption,
+  button,
+} from './typography';
 import {
   darkGlassStyles,
   glassBlur,
@@ -15,6 +24,17 @@ import {
   glassShadow,
   glassStyles,
 } from './glassmorphism';
+
+// Create enhanced typography object with shortcuts
+export const typography = {
+  ...typographyBase,
+  h1,
+  h2,
+  h3,
+  body,
+  caption,
+  button,
+} as const;
 
 export const theme = {
   colors,
@@ -38,7 +58,7 @@ export type Theme = typeof theme;
 // Re-export for convenience
 export { colors, darkColors } from './colors';
 export { spacing, layout } from './spacing';
-export { typography, textStyles } from './typography';
+export { textStyles, h1, h2, h3, body, caption, button } from './typography';
 export {
   glassColors,
   glassBlur,

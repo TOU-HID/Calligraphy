@@ -34,6 +34,7 @@ export interface CanvasMetadata {
   createdAt: number;
   updatedAt: number;
   tags: string[];
+  archived: boolean;
 }
 
 /**
@@ -117,9 +118,13 @@ export class StorageService {
    * Thumbnail Operations
    */
 
-  static saveThumbnail(canvasId: string, thumbnail: string): void {
+  static saveThumbnail(canvasId: string, thumbnail: string | null): void {
     try {
       const key = getThumbnailKey(canvasId);
+      if (thumbnail === null) {
+        storage.remove(key);
+        return;
+      }
       storage.set(key, thumbnail);
     } catch (error) {
       console.error('Failed to save thumbnail:', error);
@@ -295,6 +300,7 @@ export class StorageService {
             createdAt: canvasObj.createdAt as number,
             updatedAt: canvasObj.updatedAt as number,
             tags,
+            archived: false,
           });
         }
       });

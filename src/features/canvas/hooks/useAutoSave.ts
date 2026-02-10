@@ -1,37 +1,27 @@
 import { useEffect, useRef } from 'react';
 import { useShapesStore } from '@store/shapesStore';
 import { CanvasData, StorageService } from '@/core/storage/StorageService';
-import { Shape } from '@features/canvas/types/shapes';
+import { CanvasService, ThumbnailService } from '@features/canvasManager';
 
 const AUTOSAVE_DELAY = 1000; // 1 second debounce
-const DEFAULT_CANVAS_ID = 'default-canvas';
 
 export const useAutoSave = (): void => {
   const shapes = useShapesStore((state) => state.shapes);
   const canvasId = useShapesStore((state) => state.canvasId);
   const canvasName = useShapesStore((state) => state.canvasName);
-  const setShapes = useShapesStore((state) => state.setShapes);
-  const setCanvasInfo = useShapesStore((state) => state.setCanvasInfo);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLoadedRef = useRef(false);
+  const createdAtRef = useRef<number>(Date.now());
 
-  // Load on mount
+  // Track initial load
   useEffect(() => {
-    const loadCanvas = (): void => {
-      const savedCanvas = StorageService.loadCanvas(DEFAULT_CANVAS_ID);
-      if (savedCanvas) {
-        setShapes(savedCanvas.shapes as Shape[]);
-        setCanvasInfo(savedCanvas.id, savedCanvas.name);
-      } else {
-        // Initialize new canvas if needing specific setup
-        setCanvasInfo(DEFAULT_CANVAS_ID, 'Untitled Drawing');
-      }
-      isLoadedRef.current = true;
-    };
-
-    loadCanvas();
-  }, [setShapes, setCanvasInfo]);
+    const existingCanvas = StorageService.loadCanvas(canvasId);
+    if (existingCanvas) {
+      createdAtRef.current = existingCanvas.createdAt;
+    }
+    isLoadedRef.current = true;
+  }, [canvasId]);
 
   // Auto-save on change
   useEffect(() => {
@@ -41,20 +31,23 @@ export const useAutoSave = (): void => {
       clearTimeout(timeoutRef.current);
     }
 
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = setTimeout(async () => {
       const canvasData: CanvasData = {
         id: canvasId,
         name: canvasName,
         shapes,
-        viewport: { x: 0, y: 0, scale: 1 }, // Placeholder until viewport is in store
-        createdAt: Date.now(), // ideally should be preserved
+        viewport: { x: 0, y: 0, scale: 1 },
+        createdAt: createdAtRef.current,
         updatedAt: Date.now(),
       };
 
       StorageService.saveCanvas(canvasData);
 
-      // Also update metadata list for the gallery (if we had one)
-      // StorageService.saveCanvasList([...]);
+      // Update canvas metadata (shape count, updated timestamp)
+      CanvasService.updateCanvasShapeCount(canvasId, shapes.length);
+
+      // Generate and save thumbnail
+      await ThumbnailService.generateAndSave(canvasId);
     }, AUTOSAVE_DELAY);
 
     return () => {
