@@ -77,11 +77,19 @@ export const useGestures = (): GestureResult => {
           draggedShapeId.value = selectedShape.id;
           shapeStartX.value = selectedShape.x;
           shapeStartY.value = selectedShape.y;
-          if (selectedShape.type === 'rectangle' || selectedShape.type === 'triangle') {
-            initialShapeWidth.value = selectedShape.width;
-            initialShapeHeight.value = selectedShape.height;
+          
+          if (selectedShape.type === 'rectangle' || selectedShape.type === 'triangle' || selectedShape.type === 'diamond' || selectedShape.type === 'heart' || selectedShape.type === 'arrow') {
+            initialShapeWidth.value = (selectedShape as any).width;
+            initialShapeHeight.value = (selectedShape as any).height;
           } else if (selectedShape.type === 'circle') {
             initialShapeRadius.value = selectedShape.radius;
+          } else if (selectedShape.type === 'oval') {
+            initialShapeWidth.value = selectedShape.rx;
+            initialShapeHeight.value = selectedShape.ry;
+          } else if (selectedShape.type === 'star') {
+            initialShapeRadius.value = selectedShape.outerRadius;
+          } else if (selectedShape.type === 'hexagon' || selectedShape.type === 'pentagon' || selectedShape.type === 'octagon' || selectedShape.type === 'heptagon') {
+            initialShapeRadius.value = (selectedShape as any).size;
           }
           return;
         }
@@ -130,20 +138,31 @@ export const useGestures = (): GestureResult => {
            if (activeHandle.value === 'bottom-right') {
              updates.width = initialShapeWidth.value + deltaX;
              updates.height = initialShapeHeight.value + deltaY;
-             updates.radius = initialShapeRadius.value + Math.max(deltaX, deltaY);
+             updates.radius = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
+             updates.rx = initialShapeWidth.value + deltaX / 2;
+             updates.ry = initialShapeHeight.value + deltaY / 2;
+             updates.outerRadius = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
+             updates.innerRadius = (initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5) / 2;
+             updates.size = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
            } else if (activeHandle.value === 'bottom-left') {
              updates.x = shapeStartX.value + deltaX;
              updates.width = initialShapeWidth.value - deltaX;
              updates.height = initialShapeHeight.value + deltaY;
+             updates.rx = initialShapeWidth.value - deltaX / 2;
+             updates.ry = initialShapeHeight.value + deltaY / 2;
            } else if (activeHandle.value === 'top-right') {
              updates.y = shapeStartY.value + deltaY;
              updates.width = initialShapeWidth.value + deltaX;
              updates.height = initialShapeHeight.value - deltaY;
+             updates.rx = initialShapeWidth.value + deltaX / 2;
+             updates.ry = initialShapeHeight.value - deltaY / 2;
            } else if (activeHandle.value === 'top-left') {
              updates.x = shapeStartX.value + deltaX;
              updates.y = shapeStartY.value + deltaY;
              updates.width = initialShapeWidth.value - deltaX;
              updates.height = initialShapeHeight.value - deltaY;
+             updates.rx = initialShapeWidth.value - deltaX / 2;
+             updates.ry = initialShapeHeight.value - deltaY / 2;
            }
            
            runOnJS(handleShapeResize)(draggedShapeId.value, updates);
@@ -172,36 +191,57 @@ export const useGestures = (): GestureResult => {
                 oldProps.width = initialShapeWidth.value;
                 oldProps.height = initialShapeHeight.value;
                 oldProps.radius = initialShapeRadius.value;
+                oldProps.rx = initialShapeWidth.value;
+                oldProps.ry = initialShapeHeight.value;
+                oldProps.outerRadius = initialShapeRadius.value;
+                oldProps.size = initialShapeRadius.value;
                 
                 newProps.width = initialShapeWidth.value + deltaX;
                 newProps.height = initialShapeHeight.value + deltaY;
-                newProps.radius = initialShapeRadius.value + Math.max(deltaX, deltaY);
+                newProps.radius = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
+                newProps.rx = initialShapeWidth.value + deltaX / 2;
+                newProps.ry = initialShapeHeight.value + deltaY / 2;
+                newProps.outerRadius = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
+                newProps.innerRadius = (initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5) / 2;
+                newProps.size = initialShapeRadius.value + Math.max(deltaX, deltaY) * 0.5;
              } else if (activeHandle.value === 'bottom-left') {
                 oldProps.x = shapeStartX.value;
                 oldProps.width = initialShapeWidth.value;
                 oldProps.height = initialShapeHeight.value;
+                oldProps.rx = initialShapeWidth.value;
+                oldProps.ry = initialShapeHeight.value;
 
                 newProps.x = shapeStartX.value + deltaX;
                 newProps.width = initialShapeWidth.value - deltaX;
                 newProps.height = initialShapeHeight.value + deltaY;
+                newProps.rx = initialShapeWidth.value - deltaX / 2;
+                newProps.ry = initialShapeHeight.value + deltaY / 2;
              } else if (activeHandle.value === 'top-right') {
                 oldProps.y = shapeStartY.value;
                 oldProps.width = initialShapeWidth.value;
                 oldProps.height = initialShapeHeight.value;
+                oldProps.rx = initialShapeWidth.value;
+                oldProps.ry = initialShapeHeight.value;
 
                 newProps.y = shapeStartY.value + deltaY;
                 newProps.width = initialShapeWidth.value + deltaX;
                 newProps.height = initialShapeHeight.value - deltaY;
+                newProps.rx = initialShapeWidth.value + deltaX / 2;
+                newProps.ry = initialShapeHeight.value - deltaY / 2;
              } else if (activeHandle.value === 'top-left') {
                 oldProps.x = shapeStartX.value;
                 oldProps.y = shapeStartY.value;
                 oldProps.width = initialShapeWidth.value;
                 oldProps.height = initialShapeHeight.value;
+                oldProps.rx = initialShapeWidth.value;
+                oldProps.ry = initialShapeHeight.value;
 
                 newProps.x = shapeStartX.value + deltaX;
                 newProps.y = shapeStartY.value + deltaY;
                 newProps.width = initialShapeWidth.value - deltaX;
                 newProps.height = initialShapeHeight.value - deltaY;
+                newProps.rx = initialShapeWidth.value - deltaX / 2;
+                newProps.ry = initialShapeHeight.value - deltaY / 2;
              }
          } else {
              // Move End - Create Command

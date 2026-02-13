@@ -4,6 +4,8 @@ import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimate
 import { v4 as uuidv4 } from 'uuid';
 import { useShapesStore } from '@store/shapesStore';
 import { FreeHandPath, Point } from '../types/shapes';
+import { commandManager } from '../commands/CommandManager';
+import { AddShapeCommand } from '../commands/AddShapeCommand';
 
 export const useFreeHandDrawing = () => {
   // isDrawingMode MUST be a reactive subscription — .enabled() needs it to toggle the gesture
@@ -32,7 +34,9 @@ export const useFreeHandDrawing = () => {
       borderColor: drawingConfig.color,
       zIndex: Date.now(),
     };
-    useShapesStore.getState().addShape(newShape);
+    
+    // Use Command Pattern for Undo/Redo support
+    commandManager.execute(new AddShapeCommand(newShape));
   }, []);
 
   const gesture = useMemo(() => Gesture.Pan()
