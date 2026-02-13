@@ -12,6 +12,8 @@ import { MigrationService } from '@/core/storage/migrations/index';
 import { colors } from '@/theme';
 import { AutoSaveManager } from '@/features/canvas/components/AutoSaveManager';
 import { RootNavigator } from '@/navigation';
+import { ErrorBoundary } from '@shared/components/ErrorBoundary';
+import { ErrorFallback } from '@shared/components/ErrorFallback';
 
 /**
  * App Component
@@ -80,19 +82,25 @@ function App(): React.JSX.Element {
     );
   }
 
-  // Main app
+  // Main app wrapped with Error Boundary
   return (
-    <GestureHandlerRootView style={styles.flex}>
-      <SafeAreaProvider style={styles.container}>
-        <StatusBar
-          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
-          backgroundColor="transparent"
-          translucent
-        />
-        <AutoSaveManager />
-        <RootNavigator />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary
+      fallback={(error, retry) => (
+        <ErrorFallback error={error} onRetry={retry} />
+      )}
+    >
+      <GestureHandlerRootView style={styles.flex}>
+        <SafeAreaProvider style={styles.container}>
+          <StatusBar
+            barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+            backgroundColor="transparent"
+            translucent
+          />
+          <AutoSaveManager />
+          <RootNavigator />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
 

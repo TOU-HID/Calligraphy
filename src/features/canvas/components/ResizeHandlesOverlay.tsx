@@ -88,6 +88,45 @@ export const ResizeHandlesOverlay: React.FC<ResizeHandlesOverlayProps> = ({ shap
         bottom: { x: screenX, y: screenY + radius },
         left: { x: screenX - radius, y: screenY },
       };
+    } else if (shape.type === 'hexagon' || shape.type === 'pentagon' || shape.type === 'octagon' || shape.type === 'heptagon') {
+      const screenX = shape.x * scale + translateX;
+      const screenY = shape.y * scale + translateY;
+      const size = (shape as any).size * scale;
+
+      return {
+        topLeft: { x: screenX - size, y: screenY - size },
+        topRight: { x: screenX + size, y: screenY - size },
+        bottomLeft: { x: screenX - size, y: screenY + size },
+        bottomRight: { x: screenX + size, y: screenY + size },
+      };
+    } else if (shape.type === 'diamond' || shape.type === 'heart' || shape.type === 'arrow') {
+      const { translateX, translateY, scale } = transform;
+      const sW = (shape as any).width * scale;
+      const sH = (shape as any).height * scale;
+      
+      let sX = (shape as any).x * scale + translateX;
+      let sY = (shape as any).y * scale + translateY;
+      
+      if (shape.type === 'diamond') {
+        sX -= sW / 2;
+        sY -= sH / 2;
+      } else if (shape.type === 'heart') {
+        sX -= sW * 0.6;
+      } else if (shape.type === 'arrow') {
+        if (shape.direction === 'up' || shape.direction === 'down') {
+          sX -= sW / 2;
+        } else {
+          // for left/right sX is already left/right edge
+          sY -= sH / 2;
+        }
+      }
+
+      return {
+        topLeft: { x: sX, y: sY },
+        topRight: { x: sX + sW, y: sY },
+        bottomLeft: { x: sX, y: sY + sH },
+        bottomRight: { x: sX + sW, y: sY + sH },
+      };
     }
 
     return {};
@@ -95,7 +134,7 @@ export const ResizeHandlesOverlay: React.FC<ResizeHandlesOverlayProps> = ({ shap
 
   const positions = getHandlePositions();
 
-  if (shape.type === 'rectangle') {
+  if (shape.type === 'rectangle' || shape.type === 'hexagon' || shape.type === 'pentagon' || shape.type === 'octagon' || shape.type === 'heptagon' || shape.type === 'diamond' || shape.type === 'heart' || shape.type === 'arrow') {
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <ResizeHandle

@@ -21,6 +21,7 @@ interface CanvasGalleryHeaderProps {
   showArchived: boolean;
   onToggleArchived: () => void;
   onClearFilters: () => void;
+  onImportSuccess?: () => void;
 }
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -43,6 +44,7 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
   showArchived,
   onToggleArchived,
   onClearFilters,
+  onImportSuccess,
 }) => {
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showTagsMenu, setShowTagsMenu] = useState(false);
@@ -107,6 +109,7 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
               <Text style={styles.clearButtonText}>Clear</Text>
             </Pressable>
           )}
+
         </View>
 
         {/* Sort Menu */}
@@ -262,5 +265,16 @@ const styles = StyleSheet.create({
   },
   tagChipTextActive: {
     color: colors.background,
+  },
+  actionButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  actionButtonText: {
+    ...typography.caption,
+    color: colors.background,
+    fontWeight: '600',
   },
 });

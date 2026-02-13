@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { StyleSheet, useColorScheme, View } from 'react-native';
 import { Canvas, Path } from '@shopify/react-native-skia';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -9,7 +9,7 @@ import { ShapeRenderer } from './ShapeRenderer';
 import { SelectionIndicator } from './SelectionIndicator';
 import { colors, darkColors } from '@theme/colors';
 
-export const SkiaCanvas = (): React.JSX.Element => {
+export const SkiaCanvas = forwardRef<any>((_, ref): React.JSX.Element => {
   const shapes = useShapesStore((state) => state.shapes);
   const selectedShapeId = useShapesStore((state) => state.selectedShapeId);
   const drawingConfig = useShapesStore((state) => state.drawingConfig);
@@ -31,7 +31,7 @@ export const SkiaCanvas = (): React.JSX.Element => {
       <View
         style={[styles.container, { backgroundColor: themeColors.canvasBackground }]}
       >
-        <Canvas style={styles.canvas}>
+        <Canvas style={styles.canvas} ref={ref}>
           {shapes.map((shape) => (
             <ShapeRenderer key={shape.id} shape={shape} />
           ))}
@@ -48,7 +48,9 @@ export const SkiaCanvas = (): React.JSX.Element => {
       </View>
     </GestureDetector>
   );
-};
+});
+
+SkiaCanvas.displayName = 'SkiaCanvas';
 
 const styles = StyleSheet.create({
   container: {

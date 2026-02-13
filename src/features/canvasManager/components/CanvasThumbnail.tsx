@@ -36,6 +36,7 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
 
   const updatedDate = new Date(canvas.updatedAt).toLocaleDateString();
   const renameCanvas = useCanvasManagerStore((state) => state.renameCanvas);
+  const deleteCanvas = useCanvasManagerStore((state) => state.deleteCanvas);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(canvas.name);
@@ -63,6 +64,27 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
     setEditedName(canvas.name);
   };
 
+  const handleDelete = (e: any): void => {
+    e.stopPropagation();
+    Alert.alert(
+      'Delete Canvas',
+      `Are you sure you want to delete "${canvas.name}"? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteCanvas(canvas.id);
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <GlassCard blurAmount="medium" blurType="dark" onPress={() => onPress(canvas.id)}>
       <Pressable
@@ -83,6 +105,9 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
               <Text style={styles.archivedText}>Archived</Text>
             </View>
           )}
+          <Pressable style={styles.deleteButton} onPress={handleDelete}>
+            <Text style={styles.deleteIcon}>🗑️</Text>
+          </Pressable>
         </View>
 
         <View style={styles.infoContainer}>
@@ -187,6 +212,25 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.background,
     fontWeight: '600',
+  },
+  deleteButton: {
+    position: 'absolute',
+    bottom: spacing.xs,
+    right: spacing.xs,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(244, 67, 54, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  deleteIcon: {
+    fontSize: 18,
   },
   infoContainer: {
     gap: spacing.xs,
