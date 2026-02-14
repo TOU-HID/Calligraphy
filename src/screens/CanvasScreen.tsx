@@ -1,13 +1,14 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
+  Animated,
+  Easing,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,7 +21,7 @@ import { useShapesStore } from '@store/shapesStore';
 import { useUndoRedo } from '@/features/canvas/hooks/useUndoRedo';
 import { GlassCard } from '@/shared/components/GlassCard';
 import { PenIcon } from '@assets/icons/PenIcon';
-import { colors, darkColors } from '@/theme';
+import { useAppTheme } from '@/theme';
 import type { RouteProp } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../navigation/types';
@@ -34,6 +35,52 @@ import { ClearAllCommand } from '@/features/canvas/commands/ClearAllCommand';
 // Memoized canvas to prevent re-mounting on toolbar state changes
 const MemoizedSkiaCanvas = memo(SkiaCanvas);
 
+const PALETTE_COLORS = [
+  '#000000',
+  '#1f1f1f',
+  '#3a3a3a',
+  '#555555',
+  '#777777',
+  '#999999',
+  '#b3b3b3',
+  '#d9d9d9',
+  '#ffffff',
+  '#e74c3c',
+  '#ff6b6b',
+  '#ff8a80',
+  '#e67e22',
+  '#ff9800',
+  '#ffb74d',
+  '#f1c40f',
+  '#ffd54f',
+  '#fff176',
+  '#2ecc71',
+  '#66bb6a',
+  '#81c784',
+  '#1abc9c',
+  '#4db6ac',
+  '#80cbc4',
+  '#3498db',
+  '#64b5f6',
+  '#90caf9',
+  '#9b59b6',
+  '#ba68c8',
+  '#ce93d8',
+  '#34495e',
+  '#455a64',
+  '#607d8b',
+  '#7f8c8d',
+  '#d35400',
+  '#ff7043',
+  '#c0392b',
+  '#27ae60',
+  '#2980b9',
+  '#8e44ad',
+  '#6d4c41',
+  '#795548',
+  '#8d6e63',
+];
+
 type CanvasScreenProps = {
   route?: RouteProp<RootStackParamList, 'Canvas'>;
   navigation?: StackNavigationProp<RootStackParamList, 'Canvas'>;
@@ -41,16 +88,24 @@ type CanvasScreenProps = {
 
 export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const themeColors = isDark ? darkColors : colors;
+  const { isDark, themeColors } = useAppTheme();
   const canvasId = route?.params?.canvasId;
   const canvasRef = useCanvasRef();
 
-  const { 
-    createRectangle, createCircle, createTriangle, createOval, createStar, createHexagon, createDiamond, 
-    createPentagon, createOctagon, createHeptagon, createHeart, createArrow,
-    deleteShape 
+  const {
+    createRectangle,
+    createCircle,
+    createTriangle,
+    createOval,
+    createStar,
+    createHexagon,
+    createDiamond,
+    createPentagon,
+    createOctagon,
+    createHeptagon,
+    createHeart,
+    createArrow,
+    deleteShape,
   } = useShapeManipulation();
   const selectedShapeId = useShapesStore((state) => state.selectedShapeId);
   const shapes = useShapesStore((state) => state.shapes);
@@ -59,12 +114,18 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
   const setShapes = useShapesStore((state) => state.setShapes);
   const setCanvasInfo = useShapesStore((state) => state.setCanvasInfo);
   const canvasName = useShapesStore((state) => state.canvasName);
+  const activeColor = useShapesStore((state) => state.drawingConfig.color);
+  const setDrawingConfig = useShapesStore((state) => state.setDrawingConfig);
+  const updateShape = useShapesStore((state) => state.updateShape);
   const { canUndo, canRedo, undo, redo } = useUndoRedo();
   const setActiveCanvas = useCanvasManagerStore((state) => state.setActiveCanvas);
   const renameCanvas = useCanvasManagerStore((state) => state.renameCanvas);
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
+  const [isColorPaletteSidebarOpen, setIsColorPaletteSidebarOpen] = useState(false);
+  const [shouldRenderPalette, setShouldRenderPalette] = useState(false);
+  const paletteSlideAnim = useMemo(() => new Animated.Value(0), []);
 
   // Load canvas on mount
   useEffect(() => {
@@ -146,23 +207,161 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
     }
   }, [canvasRef, canvasName]);
 
+  const handleToggleColorPalette = useCallback((): void => {
+    if (isColorPaletteSidebarOpen) {
+      setIsColorPaletteSidebarOpen(false);
+      Animated.timing(paletteSlideAnim, {
+        toValue: 0,
+        duration: 180,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          setShouldRenderPalette(false);
+        }
+      });
+      return;
+    }
+
+    setShouldRenderPalette(true);
+    setIsColorPaletteSidebarOpen(true);
+    paletteSlideAnim.setValue(0);
+    Animated.timing(paletteSlideAnim, {
+      toValue: 1,
+      duration: 220,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [isColorPaletteSidebarOpen, paletteSlideAnim]);
+
+  const handleColorSelect = useCallback(
+    (color: string): void => {
+      setDrawingConfig({ color });
+      if (selectedShapeId) {
+        updateShape(selectedShapeId, { color });
+      }
+    },
+    [selectedShapeId, setDrawingConfig, updateShape],
+  );
+
+  const leftColumnBottom = insets.bottom + 64;
+
   return (
     <View style={styles.container}>
+      {/* Left Column */}
+      <View style={[styles.leftColumn, { top: insets.top + 4, bottom: leftColumnBottom }]}>
+        <GlassCard
+          style={styles.leftSideBar}
+          blurAmount="strong"
+          blurType={isDark ? 'dark' : 'light'}
+          padding={null}
+        >
+          <View style={styles.leftSideUtilityContent}>
+            {navigation && (
+              <TouchableOpacity
+                style={[styles.leftSidebarButton, styles.leftSidebarButtonTop]}
+                onPress={handleGoBack}
+              >
+                <View style={styles.iconPlaceholder}>
+                  <Text style={styles.sidebarIconText}>🏠</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+
+            <View style={[styles.leftSideDivider, { backgroundColor: themeColors.border }]} />
+
+            <TouchableOpacity
+              style={[
+                styles.leftSidebarButton,
+                styles.leftSidebarButtonMiddle,
+                isDrawingMode && styles.leftSidebarButtonActive,
+                isDrawingMode &&
+                  (isDark
+                    ? styles.leftSidebarButtonActiveDark
+                    : styles.leftSidebarButtonActiveLight),
+              ]}
+              onPress={handleToggleDraw}
+            >
+              <View style={styles.iconPlaceholder}>
+                <PenIcon size={20} color={themeColors.text} />
+              </View>
+            </TouchableOpacity>
+
+            <View style={[styles.leftSideDivider, { backgroundColor: themeColors.border }]} />
+
+            <TouchableOpacity
+              style={[
+                styles.leftSidebarButton,
+                styles.leftSidebarButtonBottom,
+                isColorPaletteSidebarOpen && styles.leftSidebarButtonActive,
+                isColorPaletteSidebarOpen &&
+                  (isDark
+                    ? styles.leftSidebarButtonActiveDark
+                    : styles.leftSidebarButtonActiveLight),
+              ]}
+              onPress={handleToggleColorPalette}
+            >
+              <View style={styles.iconPlaceholder}>
+                <Text style={styles.sidebarIconText}>🎨</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </GlassCard>
+
+        {/* Color Palette Sidebar */}
+        {shouldRenderPalette && (
+          <Animated.View
+            style={[
+              styles.paletteSlideContainer,
+              {
+                opacity: paletteSlideAnim,
+                transform: [
+                  {
+                    translateY: paletteSlideAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [-14, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <GlassCard
+              style={styles.colorPaletteSidebarCard}
+              blurAmount="strong"
+              blurType={isDark ? 'dark' : 'light'}
+              padding={null}
+            >
+              <ScrollView
+                style={styles.colorPaletteScrollView}
+                contentContainerStyle={styles.colorPaletteScrollContent}
+                showsVerticalScrollIndicator
+              >
+                {PALETTE_COLORS.map((color) => (
+                  <TouchableOpacity
+                    key={color}
+                    onPress={() => handleColorSelect(color)}
+                    style={[
+                      styles.colorCircleVertical,
+                      { backgroundColor: color },
+                      activeColor === color && styles.activeColorCircle,
+                      color === '#ffffff' && styles.whiteBorder,
+                    ]}
+                  />
+                ))}
+              </ScrollView>
+            </GlassCard>
+          </Animated.View>
+        )}
+      </View>
+
       {/* Header Row */}
       <View style={[styles.headerRowContainer, { top: insets.top + 4 }]}>
-        {navigation && (
-          <GlassCard style={styles.headerCard} blurAmount="strong" blurType={isDark ? 'dark' : 'light'} padding={null}>
-            <Pressable style={styles.backButton} onPress={handleGoBack}>
-              <Text style={[styles.backButtonText, { color: themeColors.text }]}>← Gallery</Text>
-            </Pressable>
-          </GlassCard>
-        )}
-
         {/* Canvas Name Editor */}
-        <GlassCard 
-          style={styles.nameCard} 
-          blurAmount="strong" 
-          blurType={isDark ? 'dark' : 'light'} 
+        <GlassCard
+          style={styles.nameCard}
+          blurAmount="strong"
+          blurType={isDark ? 'dark' : 'light'}
           padding={null}
         >
           {isEditingName ? (
@@ -191,11 +390,12 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
               <Text style={[styles.nameText, { color: themeColors.text }]} numberOfLines={1}>
                 {canvasName}
               </Text>
-              <Text style={[styles.editIcon, { color: themeColors.textSecondary }]}>✎</Text>
+              <Text style={[styles.editIcon, isDark ? styles.editIconDark : styles.editIconLight]}>
+                ✎
+              </Text>
             </Pressable>
           )}
         </GlassCard>
-
       </View>
 
       {/* Side Utility Column */}
@@ -214,7 +414,7 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
               disabled={shapes.length === 0}
             >
               <View style={styles.iconPlaceholder}>
-                <Text style={{ fontSize: 14 }}>📤</Text>
+                <Text style={styles.sidebarIconText}>📤</Text>
               </View>
             </TouchableOpacity>
 
@@ -226,7 +426,7 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
               disabled={!canUndo}
             >
               <View style={styles.iconPlaceholder}>
-                <Text style={{ fontSize: 14 }}>↩️</Text>
+                <Text style={styles.sidebarIconText}>↩️</Text>
               </View>
             </TouchableOpacity>
 
@@ -236,35 +436,29 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
               disabled={!canRedo}
             >
               <View style={styles.iconPlaceholder}>
-                <Text style={{ fontSize: 14 }}>↪️</Text>
+                <Text style={styles.sidebarIconText}>↪️</Text>
               </View>
             </TouchableOpacity>
 
             <View style={[styles.sideDivider, { backgroundColor: themeColors.border }]} />
 
             <TouchableOpacity
-              style={[
-                styles.toolButton,
-                !selectedShapeId && styles.toolButtonDisabled,
-              ]}
+              style={[styles.toolButton, !selectedShapeId && styles.toolButtonDisabled]}
               onPress={handleDelete}
               disabled={!selectedShapeId}
             >
               <View style={styles.iconPlaceholder}>
-                <Text style={{ fontSize: 14 }}>🗑️</Text>
+                <Text style={styles.sidebarIconText}>🗑️</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[
-                styles.toolButton,
-                shapes.length === 0 && styles.toolButtonDisabled,
-              ]}
+              style={[styles.toolButton, shapes.length === 0 && styles.toolButtonDisabled]}
               onPress={handleClearAll}
               disabled={shapes.length === 0}
             >
               <View style={styles.iconPlaceholder}>
-                <Text style={{ fontSize: 14 }}>🧹</Text>
+                <Text style={styles.sidebarIconText}>🧹</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -276,29 +470,8 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
         <MemoizedSkiaCanvas ref={canvasRef} />
       </View>
 
-      {/* Bottom Shape Palette (Top layer now single layer) */}
+      {/* Bottom Shape Palette */}
       <View style={[styles.toolbarContainer, { bottom: insets.bottom + 10 }]}>
-        <GlassCard
-          style={styles.drawButtonCard}
-          blurAmount="strong"
-          blurType={isDark ? 'dark' : 'light'}
-          padding={null}
-        >
-          <TouchableOpacity
-            style={[
-              styles.toolButton, 
-              { minWidth: 0, paddingHorizontal: 12, paddingVertical: 6 }, 
-              isDrawingMode && styles.toolButtonActive
-            ]}
-            onPress={handleToggleDraw}
-          >
-            <View style={styles.iconPlaceholder}>
-              <PenIcon size={20} color={themeColors.text} />
-            </View>
-            <Text style={[styles.toolLabel, { color: themeColors.text, fontSize: 10 }]}>Draw</Text>
-          </TouchableOpacity>
-        </GlassCard>
-
         <GlassCard
           style={styles.shapesToolbar}
           blurAmount="strong"
@@ -311,7 +484,6 @@ export const CanvasScreen: React.FC<CanvasScreenProps> = ({ route, navigation })
             style={styles.shapesScrollView}
             contentContainerStyle={styles.shapesContent}
           >
-
             <TouchableOpacity style={styles.toolButton} onPress={handleCreateTriangle}>
               <View style={styles.iconPlaceholder}>
                 <ShapeIcon type="triangle" color={themeColors.shapeGreen} />
@@ -412,7 +584,7 @@ const styles = StyleSheet.create({
     left: 10,
     right: 10,
     alignItems: 'center',
-    gap: 8, // Vertical gap between Draw button and shapes list
+    gap: 8,
   },
   shapesToolbar: {
     width: '100%',
@@ -422,12 +594,20 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.15)',
     paddingVertical: 2,
   },
-  drawButtonCard: {
+  leftColumn: {
+    position: 'absolute',
+    left: 8,
+    zIndex: 1001,
+    width: 36,
+    alignItems: 'center',
+    gap: 8,
+  },
+  leftSideBar: {
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.15)',
-    paddingHorizontal: 0, // Highlight fills the button
-    alignSelf: 'flex-start', // Position to the left
+    width: 36,
+    alignSelf: 'center',
   },
   rightColumn: {
     position: 'absolute',
@@ -447,10 +627,22 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     gap: 12,
   },
+  leftSideUtilityContent: {
+    alignItems: 'center',
+    paddingVertical: 0,
+    gap: 0,
+  },
   sideDivider: {
     width: '60%',
     height: 1,
     marginVertical: 4,
+    alignSelf: 'center',
+  },
+  leftSideDivider: {
+    width: '60%',
+    height: 1,
+    marginVertical: 0,
+    alignSelf: 'center',
   },
   shapesScrollView: {
     flex: 1,
@@ -465,8 +657,36 @@ const styles = StyleSheet.create({
   toolButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 1, // Minimal vertical space
-    minWidth: 36, // Match thinner bar width
+    paddingVertical: 1,
+    minWidth: 36,
+  },
+  leftSidebarButton: {
+    width: 36,
+    minHeight: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  leftSidebarButtonTop: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  leftSidebarButtonMiddle: {
+    borderRadius: 0,
+  },
+  leftSidebarButtonBottom: {
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  leftSidebarButtonActive: {
+    width: 36,
+  },
+  leftSidebarButtonActiveDark: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
+  },
+  leftSidebarButtonActiveLight: {
+    backgroundColor: 'rgba(90, 90, 90, 0.16)',
   },
   toolButtonActive: {
     backgroundColor: 'rgba(52, 152, 219, 0.2)',
@@ -485,14 +705,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  divider: {
-    width: 1,
-    height: 14, // Even shorter divider
-    marginHorizontal: 8,
+  sidebarIconText: {
+    fontSize: 14,
+  },
+  colorPaletteSidebarCard: {
+    flex: 1,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    width: 36,
+    alignSelf: 'center',
+  },
+  paletteSlideContainer: {
+    flex: 1,
+    width: 36,
+  },
+  colorPaletteScrollView: {
+    width: '100%',
+  },
+  colorPaletteScrollContent: {
+    paddingVertical: 12,
+    paddingHorizontal: 2,
+    gap: 8,
+    alignItems: 'center',
+  },
+  colorCircleVertical: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  activeColorCircle: {
+    borderColor: 'rgba(255, 255, 255, 0.8)',
+    transform: [{ scale: 1.15 }],
+  },
+  whiteBorder: {
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   headerRowContainer: {
     position: 'absolute',
-    left: 8,
+    left: 53,
     right: 52, // 8pt gap from the side bar (36 width + 8 right padding + 8 gap = 52)
     zIndex: 1000,
     flexDirection: 'row',
@@ -537,7 +791,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editIcon: {
-    fontSize: 13,
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  editIconDark: {
+    color: 'rgba(255, 255, 255, 0.92)',
+  },
+  editIconLight: {
+    color: 'rgba(40, 40, 40, 0.88)',
   },
   nameEditRow: {
     flexDirection: 'row',
