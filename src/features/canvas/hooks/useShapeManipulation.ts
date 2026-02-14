@@ -10,7 +10,10 @@ export const useShapeManipulation = () => {
   const selectShape = useShapesStore((state) => state.selectShape);
   const updateShape = useShapesStore((state) => state.updateShape);
 
+  const getActiveColor = () => useShapesStore.getState().drawingConfig.color;
+
   const createRectangle = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'rectangle',
@@ -18,32 +21,34 @@ export const useShapeManipulation = () => {
       y,
       width: 100,
       height: 100,
-      color: '#3498db',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#2c3e50',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createCircle = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'circle',
       x,
       y,
       radius: 50,
-      color: '#e74c3c',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#c0392b',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createTriangle = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'triangle',
@@ -51,16 +56,17 @@ export const useShapeManipulation = () => {
       y,
       width: 100,
       height: 100,
-      color: '#2ecc71',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#27ae60',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createOval = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'oval',
@@ -68,16 +74,17 @@ export const useShapeManipulation = () => {
       y,
       rx: 60,
       ry: 40,
-      color: '#9b59b6',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#8e44ad',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createStar = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'star',
@@ -86,32 +93,34 @@ export const useShapeManipulation = () => {
       points: 5,
       innerRadius: 25,
       outerRadius: 50,
-      color: '#f1c40f',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#f39c12',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createHexagon = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'hexagon',
       x,
       y,
       size: 50,
-      color: '#1abc9c',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#16a085',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createDiamond = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'diamond',
@@ -119,64 +128,68 @@ export const useShapeManipulation = () => {
       y,
       width: 80,
       height: 100,
-      color: '#e67e22',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#d35400',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createPentagon = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'pentagon',
       x,
       y,
       size: 50,
-      color: '#27ae60',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#1e8449',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createOctagon = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'octagon',
       x,
       y,
       size: 50,
-      color: '#d35400',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#a04000',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createHeptagon = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'heptagon',
       x,
       y,
       size: 50,
-      color: '#7f8c8d',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#34495e',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createHeart = useCallback((x: number, y: number): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'heart',
@@ -184,16 +197,17 @@ export const useShapeManipulation = () => {
       y,
       width: 80,
       height: 80,
-      color: '#c0392b',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#922b21',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
   }, []);
 
   const createArrow = useCallback((x: number, y: number, direction: 'up' | 'down' | 'left' | 'right' = 'right'): void => {
+    const color = getActiveColor();
     const shape: Shape = {
       id: uuid(),
       type: 'arrow',
@@ -202,10 +216,10 @@ export const useShapeManipulation = () => {
       width: 100,
       height: 60,
       direction,
-      color: '#2980b9',
+      color,
       opacity: 1,
       borderWidth: 2,
-      borderColor: '#1a5276',
+      borderColor: color,
       zIndex: Date.now(),
     };
     commandManager.execute(new AddShapeCommand(shape));
