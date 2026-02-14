@@ -37,6 +37,8 @@ export interface CanvasMetadata {
   archived: boolean;
 }
 
+export type ThemeMode = 'light' | 'dark';
+
 /**
  * Storage Service Class
  */
@@ -163,6 +165,24 @@ export class StorageService {
     } catch (error) {
       console.error('Failed to get active canvas ID:', error);
       return null;
+    }
+  }
+
+  static setThemeMode(mode: ThemeMode): void {
+    try {
+      storage.set(StorageKeys.THEME_MODE, mode);
+    } catch (error) {
+      console.error('Failed to set theme mode:', error);
+    }
+  }
+
+  static getThemeMode(): ThemeMode {
+    try {
+      const mode = storage.getString(StorageKeys.THEME_MODE);
+      return mode === 'dark' ? 'dark' : 'light';
+    } catch (error) {
+      console.error('Failed to get theme mode:', error);
+      return 'light';
     }
   }
 
