@@ -5,31 +5,57 @@
  */
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CanvasGalleryScreen } from '@/screens/CanvasGalleryScreen';
 import { CanvasScreen } from '@/screens/CanvasScreen';
-import { colors, typography } from '@/theme';
+import { typography, useAppTheme } from '@/theme';
 import type { RootStackParamList } from './types';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: React.FC = () => {
+  const { isDark, themeColors } = useAppTheme();
+
+  const navigationTheme = isDark
+    ? {
+        ...DarkTheme,
+        colors: {
+          ...DarkTheme.colors,
+          background: themeColors.background,
+          card: themeColors.background,
+          text: themeColors.text,
+          border: themeColors.border,
+          primary: themeColors.primary,
+        },
+      }
+    : {
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: themeColors.background,
+          card: themeColors.background,
+          text: themeColors.text,
+          border: themeColors.border,
+          primary: themeColors.primary,
+        },
+      };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator
         initialRouteName="CanvasGallery"
         screenOptions={{
           headerStyle: {
-            backgroundColor: colors.background,
+            backgroundColor: themeColors.background,
           },
-          headerTintColor: colors.text,
+          headerTintColor: themeColors.text,
           headerTitleStyle: {
             ...typography.h2,
             fontWeight: '600',
           },
           cardStyle: {
-            backgroundColor: colors.background,
+            backgroundColor: themeColors.background,
           },
         }}
       >
