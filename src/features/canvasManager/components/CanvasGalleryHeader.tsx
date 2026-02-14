@@ -4,9 +4,9 @@
  * Search, filter, and sort controls
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useAppTheme } from '@/theme';
 import { SortOption } from '../types';
 import { GlassCard } from '@shared/components/GlassCard';
 
@@ -44,8 +44,13 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
   showArchived,
   onToggleArchived,
   onClearFilters,
-  onImportSuccess,
+  // onImportSuccess,
 }) => {
+  const { isDark, themeColors } = useAppTheme();
+  const styles = useMemo(
+    () => createStyles(themeColors as typeof import('@/theme').colors, isDark),
+    [themeColors, isDark],
+  );
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showTagsMenu, setShowTagsMenu] = useState(false);
 
@@ -54,20 +59,23 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
   return (
     <GlassCard
       blurAmount="medium"
-      blurType="dark"
+      blurType={isDark ? 'dark' : 'light'}
       style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
     >
       <View style={styles.container}>
         {/* Search Bar */}
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search canvases..."
-          placeholderTextColor={colors.textSecondary}
-          value={searchQuery}
-          onChangeText={onSearchChange}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+        <View style={styles.searchInputContainer}>
+          {/* <Text style={styles.searchIcon}>⌕</Text> */}
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search canvases..."
+            placeholderTextColor={themeColors.textSecondary}
+            value={searchQuery}
+            onChangeText={onSearchChange}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </View>
 
         {/* Filter Row */}
         <View style={styles.filterRow}>
@@ -109,7 +117,6 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
               <Text style={styles.clearButtonText}>Clear</Text>
             </Pressable>
           )}
-
         </View>
 
         {/* Sort Menu */}
@@ -168,113 +175,136 @@ export const CanvasGalleryHeader: React.FC<CanvasGalleryHeaderProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: spacing.xs,
-    gap: spacing.sm,
-  },
-  searchInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    ...typography.body,
-    color: colors.text,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  filterRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-    flexWrap: 'wrap',
-  },
-  filterButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  filterButtonActive: {
-    backgroundColor: 'rgba(79, 70, 229, 0.3)',
-    borderColor: colors.primary,
-  },
-  filterButtonText: {
-    ...typography.caption,
-    color: colors.text,
-    fontWeight: '500',
-  },
-  clearButton: {
-    backgroundColor: colors.error,
-    borderRadius: 8,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  clearButtonText: {
-    ...typography.caption,
-    color: colors.background,
-    fontWeight: '600',
-  },
-  menuContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    padding: spacing.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  menuItem: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 4,
-  },
-  menuItemActive: {
-    backgroundColor: 'rgba(79, 70, 229, 0.3)',
-  },
-  menuItemText: {
-    ...typography.body,
-    color: colors.text,
-  },
-  menuItemTextActive: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  tagsMenu: {
-    maxHeight: 50,
-  },
-  tagsMenuContent: {
-    gap: spacing.xs,
-    paddingVertical: spacing.xs,
-  },
-  tagChip: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  tagChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  tagChipText: {
-    ...typography.caption,
-    color: colors.text,
-    fontWeight: '500',
-  },
-  tagChipTextActive: {
-    color: colors.background,
-  },
-  actionButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  actionButtonText: {
-    ...typography.caption,
-    color: colors.background,
-    fontWeight: '600',
-  },
-});
+const createStyles = (
+  themeColors: typeof import('@/theme').colors,
+  isDark: boolean,
+): ReturnType<typeof StyleSheet.create> =>
+  StyleSheet.create({
+    container: {
+      padding: spacing.xs,
+      gap: spacing.sm,
+    },
+    searchInput: {
+      flex: 1,
+      backgroundColor: 'transparent',
+      borderRadius: 14,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.sm,
+      ...typography.body,
+      color: themeColors.text,
+    },
+    searchInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 14,
+      paddingHorizontal: spacing.sm,
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: isDark ? 'rgba(255, 255, 255, 0.24)' : 'rgba(120, 120, 120, 0.24)',
+      shadowColor: isDark ? '#FFFFFF' : '#000000',
+      shadowOpacity: isDark ? 0.08 : 0.06,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    searchIcon: {
+      ...typography.body,
+      color: themeColors.textSecondary,
+      marginRight: spacing.xs,
+      fontWeight: '700',
+    },
+    filterRow: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+      flexWrap: 'wrap',
+    },
+    filterButton: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 8,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    filterButtonActive: {
+      backgroundColor: 'rgba(79, 70, 229, 0.3)',
+      borderColor: themeColors.primary,
+    },
+    filterButtonText: {
+      ...typography.caption,
+      color: themeColors.text,
+      fontWeight: '500',
+    },
+    clearButton: {
+      backgroundColor: themeColors.error,
+      borderRadius: 8,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+    },
+    clearButtonText: {
+      ...typography.caption,
+      color: themeColors.background,
+      fontWeight: '600',
+    },
+    menuContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 8,
+      padding: spacing.xs,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    menuItem: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: 4,
+    },
+    menuItemActive: {
+      backgroundColor: 'rgba(79, 70, 229, 0.3)',
+    },
+    menuItemText: {
+      ...typography.body,
+      color: themeColors.text,
+    },
+    menuItemTextActive: {
+      color: themeColors.primary,
+      fontWeight: '600',
+    },
+    tagsMenu: {
+      maxHeight: 50,
+    },
+    tagsMenuContent: {
+      gap: spacing.xs,
+      paddingVertical: spacing.xs,
+    },
+    tagChip: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 16,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    tagChipActive: {
+      backgroundColor: themeColors.primary,
+      borderColor: themeColors.primary,
+    },
+    tagChipText: {
+      ...typography.caption,
+      color: themeColors.text,
+      fontWeight: '500',
+    },
+    tagChipTextActive: {
+      color: themeColors.background,
+    },
+    actionButton: {
+      backgroundColor: themeColors.primary,
+      borderRadius: 8,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+    },
+    actionButtonText: {
+      ...typography.caption,
+      color: themeColors.background,
+      fontWeight: '600',
+    },
+  });
