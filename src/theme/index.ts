@@ -24,6 +24,7 @@ import {
   glassShadow,
   glassStyles,
 } from './glassmorphism';
+import { useAppTheme } from './useAppTheme';
 
 // Create enhanced typography object with shortcuts
 export const typography = {
@@ -67,6 +68,7 @@ export {
   glassStyles,
   darkGlassStyles,
 } from './glassmorphism';
+export { useAppTheme };
 export type { ColorKey } from './colors';
 export type { SpacingKey } from './spacing';
 export type { TextStyleKey } from './typography';
