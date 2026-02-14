@@ -4,7 +4,7 @@
  * Main screen showing all canvases in a scrollable grid
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -14,7 +14,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useAppTheme } from '@/theme';
 import { useCanvasManagerStore } from '@store/canvasManagerStore';
 import { CanvasThumbnail } from './CanvasThumbnail';
 import { CanvasGalleryHeader } from './CanvasGalleryHeader';
@@ -25,6 +25,9 @@ interface CanvasGalleryProps {
 }
 
 export const CanvasGallery: React.FC<CanvasGalleryProps> = ({ onCanvasSelect }) => {
+  const { themeColors } = useAppTheme();
+  const styles = useMemo(() => createStyles(themeColors as typeof import('@/theme').colors), [themeColors]);
+
   const {
     filteredCanvases,
     searchQuery,
@@ -76,7 +79,7 @@ export const CanvasGallery: React.FC<CanvasGalleryProps> = ({ onCanvasSelect }) 
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
+        <ActivityIndicator size="large" color={themeColors.primary} />
         <Text style={styles.loadingText}>Loading canvases...</Text>
       </View>
     );
@@ -129,46 +132,50 @@ export const CanvasGallery: React.FC<CanvasGalleryProps> = ({ onCanvasSelect }) 
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-    gap: spacing.md,
-  },
-  loadingText: {
-    ...typography.body,
-    color: colors.textSecondary,
-  },
-  listContent: {
-    padding: spacing.md,
-    gap: spacing.md,
-  },
-  fab: {
-    position: 'absolute',
-    bottom: spacing.xl,
-    right: spacing.xl,
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-  fabText: {
-    fontSize: 32,
-    color: colors.background,
-    fontWeight: '300',
-    lineHeight: 36,
-  },
-});
+const createStyles = (themeColors: typeof import('@/theme').colors): ReturnType<typeof StyleSheet.create> =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: themeColors.backgroundSecondary,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: themeColors.background,
+      gap: spacing.md,
+    },
+    loadingText: {
+      ...typography.body,
+      color: themeColors.textSecondary,
+    },
+    listContent: {
+      padding: spacing.md,
+      gap: spacing.md,
+      paddingBottom: spacing.xl * 2,
+    },
+    fab: {
+      position: 'absolute',
+      bottom: spacing.xl,
+      right: spacing.xl,
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: themeColors.primary,
+      borderWidth: 1,
+      borderColor: themeColors.surface,
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+    },
+    fabText: {
+      fontSize: 32,
+      color: themeColors.background,
+      fontWeight: '300',
+      lineHeight: 36,
+    },
+  });
