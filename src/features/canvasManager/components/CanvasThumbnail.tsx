@@ -8,7 +8,7 @@ import React, { useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { CanvasMetadata } from '@core/storage/StorageService';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useAppTheme } from '@/theme';
 import { GlassCard } from '@shared/components/GlassCard';
 import { useCanvasManagerStore } from '@store/canvasManagerStore';
 
@@ -25,6 +25,9 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
   onLongPress,
   selected = false,
 }) => {
+  const { isDark, themeColors } = useAppTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+
   // Safely validate thumbnail with useMemo to prevent render issues
   const validThumbnail = useMemo(() => {
     const thumb = canvas.thumbnail;
@@ -86,7 +89,11 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
   };
 
   return (
-    <GlassCard blurAmount="medium" blurType="dark" onPress={() => onPress(canvas.id)}>
+    <GlassCard
+      blurAmount="medium"
+      blurType={isDark ? 'dark' : 'light'}
+      onPress={() => onPress(canvas.id)}
+    >
       <Pressable
         style={[styles.container, selected && styles.selected]}
         onPress={() => onPress(canvas.id)}
@@ -166,159 +173,165 @@ export const CanvasThumbnail: React.FC<CanvasThumbnailProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 12,
-    padding: spacing.xs,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selected: {
-    borderColor: colors.primary,
-    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-  },
-  thumbnailContainer: {
-    width: '100%',
-    aspectRatio: 4 / 3,
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: spacing.sm,
-    position: 'relative',
-  },
-  thumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholderContainer: {
-    flex: 1,
-    backgroundColor: colors.border,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    ...typography.body,
-    color: colors.textSecondary,
-  },
-  archivedBadge: {
-    position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
-    backgroundColor: colors.error,
-    borderRadius: 4,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 2,
-  },
-  archivedText: {
-    ...typography.caption,
-    color: colors.background,
-    fontWeight: '600',
-  },
-  deleteButton: {
-    position: 'absolute',
-    bottom: spacing.xs,
-    right: spacing.xs,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244, 67, 54, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  deleteIcon: {
-    fontSize: 18,
-  },
-  infoContainer: {
-    gap: spacing.xs,
-  },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  name: {
-    ...typography.h3,
-    color: colors.text,
-    flex: 1,
-  },
-  editButton: {
-    padding: spacing.xs,
-  },
-  editIcon: {
-    fontSize: 18,
-    color: colors.textSecondary,
-  },
-  nameEditContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    flex: 1,
-  },
-  nameInput: {
-    ...typography.h3,
-    color: colors.text,
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 4,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 4,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  saveButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#4CAF50',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cancelButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#F44336',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 14,
-    color: '#FFF',
-    fontWeight: 'bold',
-  },
-  metadataRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  metadata: {
-    ...typography.caption,
-    color: colors.textSecondary,
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    alignItems: 'center',
-  },
-  tag: {
-    backgroundColor: colors.primaryLight,
-    borderRadius: 4,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 2,
-  },
-  tagText: {
-    ...typography.caption,
-    color: colors.primary,
-    fontWeight: '500',
-  },
-  moreTagsText: {
-    ...typography.caption,
-    color: colors.textSecondary,
-    fontStyle: 'italic',
-  },
-});
+const createStyles = (themeColors: typeof import('@/theme').colors) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: 12,
+      padding: spacing.sm,
+      borderWidth: 1.5,
+      borderColor: 'transparent',
+    },
+    selected: {
+      borderColor: themeColors.primary,
+      backgroundColor: 'rgba(79, 70, 229, 0.1)',
+    },
+    thumbnailContainer: {
+      width: '100%',
+      aspectRatio: 4 / 3,
+      borderRadius: 8,
+      overflow: 'hidden',
+      marginBottom: spacing.sm,
+      position: 'relative',
+    },
+    thumbnail: {
+      width: '100%',
+      height: '100%',
+    },
+    placeholderContainer: {
+      flex: 1,
+      backgroundColor: themeColors.border,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    placeholderText: {
+      ...typography.body,
+      color: themeColors.textSecondary,
+    },
+    archivedBadge: {
+      position: 'absolute',
+      top: spacing.xs,
+      right: spacing.xs,
+      backgroundColor: themeColors.error,
+      borderRadius: 4,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 2,
+    },
+    archivedText: {
+      ...typography.caption,
+      color: themeColors.background,
+      fontWeight: '600',
+    },
+    deleteButton: {
+      position: 'absolute',
+      bottom: spacing.xs,
+      right: spacing.xs,
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: 'rgba(244, 67, 54, 0.9)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    deleteIcon: {
+      fontSize: 18,
+    },
+    infoContainer: {
+      gap: spacing.xs,
+    },
+    nameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    },
+    name: {
+      ...typography.h2,
+      color: themeColors.text,
+      flex: 1,
+      fontWeight: '800',
+      letterSpacing: 0.2,
+      textShadowColor: themeColors.shadow,
+      textShadowOffset: { width: 0, height: 1 },
+      textShadowRadius: 1,
+    },
+    editButton: {
+      padding: spacing.xs,
+    },
+    editIcon: {
+      fontSize: 18,
+      color: themeColors.textSecondary,
+    },
+    nameEditContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      flex: 1,
+    },
+    nameInput: {
+      ...typography.h3,
+      color: themeColors.text,
+      flex: 1,
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: 4,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 4,
+      borderWidth: 1,
+      borderColor: themeColors.primary,
+    },
+    saveButton: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: '#4CAF50',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    cancelButton: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: '#F44336',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 14,
+      color: '#FFF',
+      fontWeight: 'bold',
+    },
+    metadataRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    },
+    metadata: {
+      ...typography.caption,
+      color: themeColors.textSecondary,
+    },
+    tagsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.xs,
+      alignItems: 'center',
+    },
+    tag: {
+      backgroundColor: themeColors.primaryLight,
+      borderRadius: 4,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 2,
+    },
+    tagText: {
+      ...typography.caption,
+      color: themeColors.primary,
+      fontWeight: '500',
+    },
+    moreTagsText: {
+      ...typography.caption,
+      color: themeColors.textSecondary,
+      fontStyle: 'italic',
+    },
+  });
